@@ -1,6 +1,7 @@
 project('synctex', 'c')
 
-version = '1.3'
+# Keep aligned with synctex_parser_api_level.txt, not the parser release version.
+version = '2.0.0'
 
 pkg = import('pkgconfig')
 
@@ -35,16 +36,18 @@ synctex_dep = declare_dependency(
   link_with: synctex_lib,
 )
 
+# Preserve the legacy flat include layout as well as namespaced consumers.
 install_headers(headers)
+install_headers(headers, subdir: 'synctex')
 
 pkg.generate(
   name: 'synctex',
   version: version,
-  libraries: 'synctex',
-  subdirs: 'synctex',
+  libraries: synctex_lib,
+  subdirs: '.',
   description: 'SyncTeX parser library',
-  url: 'http://github.org/jlaurens/synctex',
-  install_dir: join_paths(get_option('prefix'), 'lib', 'pkgconfig'),
+  url: 'https://github.com/jlaurens/synctex',
+  install_dir: join_paths(get_option('libdir'), 'pkgconfig'),
 )
 
 synctex_src = include_directories('.')
